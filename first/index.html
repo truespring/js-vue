@@ -38,28 +38,33 @@
         </form>
     </div>
     <script src="https://unpkg.com/vue@2.5.13/dist/vue.js"></script>
-    <script>
+    <script type="module">
+        import MessageList from './components/MessageList.js';
         let vm = new Vue({
             el: '#app',
             data: {
                 messages: [],
                 newMessage: ''
             },
+            computed: {
+                addDisabled() {
+                    return this.messages.length >= 10 || this.newMessage.length > 50;
+                }
+            },
+            components: {
+                MessageList
+            },
             methods: {
                 addMessage(event) {
                     if (!this.newMessage) return
-                    this.messages.push({ text: this.newMessage, createdAt: new Date() })
+                    let now = new Date()
+                    this.messages.push({ id: now.getTime(), text: this.newMessage, createdAt: now })
                     this.newMessage = ''
                 },
                 deleteMessage(message) {
                     this.messages.splice(this.messages.indexOf(message), 1)
                 }
             },
-            computed: {
-                addDisabled() {
-                    return this.messages.length >= 10 || this.newMessage.length > 50;
-                }
-            }
         })
     </script>
 </body>
